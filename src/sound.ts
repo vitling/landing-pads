@@ -59,7 +59,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         const gain = ctx.createGain();
         gain.gain.value = 0.04;
         const filter = ctx.createBiquadFilter();
-        filter.Q.value = 5;
+        filter.Q.value = 1;
 
         const lfo = ctx.createOscillator();
 

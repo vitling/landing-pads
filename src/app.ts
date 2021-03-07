@@ -5,12 +5,12 @@ type Note = {
     filter: () => number
 }
 
-function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean = false, moon: boolean = true, grading:boolean = false) {
+function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean = true, moon: boolean = true, grading:boolean = false) {
     const g = canvas.getContext("2d") as CanvasRenderingContext2D;
     const bb = document.createElement("canvas");
     const gb = bb.getContext("2d") as CanvasRenderingContext2D;
-    const w = canvas.width = bb.width = 1080;
-    const h = canvas.height =bb.height =  1920;
+    const w = canvas.width = bb.width = 1200;
+    const h = canvas.height =bb.height =  1600;
 
     function clear() {
         g.fillStyle = "black";
@@ -57,15 +57,15 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
         g.arc(x+ (Math.min(y, h/2)/h) * 150 - 75 + (y>h/2 ? ((y-h/2)/(h/2)) *  Math.sin(60* y/h) * 20 : 0),y ,rad,0,Math.PI * 2);
         if (y > h*0.5 && y < h * 0.513) {
             let diff = (y - h * 0.5) / (h * 0.013);
-            for (let i = -2; i <= 2; i++) {
-                g.arc(i * 16 * (1 - diff) + x+ (Math.min(y, h/2)/h) * 150 - 75 + (y>h/2 ? ((y-h/2)/(h/2)) *  Math.sin(60* y/h) * 20 : 0),y ,rad,0,Math.PI * 2);
+            for (let i = -8; i <= 8; i++) {
+                g.arc(i * 4 * (1 - diff) + x+ (Math.min(y, h/2)/h) * 150 - 75 + (y>h/2 ? ((y-h/2)/(h/2)) *  Math.sin(60* y/h) * 20 : 0),y ,rad,0,Math.PI * 2);
             }
         }
 
         g.fill();
     }
 
-    let hillData: number[] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0.8,0.3,0.2,0.3,0.6,0,0,0.1,0.3,0.2,0,0];
+    let hillData: number[] = [1.2,0.9,1.0,1.0,0.8,0.7,0.4,0.3,0.32,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     // for (let i =0 ; i < 20; i++) {
     //     hill[i] = Math.random() < 0.5 ? 0 : Math.random();
     // }
@@ -94,7 +94,7 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
         // g.fillRect(0,0,w,h);
         //g.globalCompositeOperation = "lighter";
         g.globalAlpha = 0.95;
-         g.filter = "blur(3px)";
+        g.filter = "blur(3px)";
 
         //g.drawImage(bb, 5,0);
         g.drawImage(bb, 0,0);
@@ -106,7 +106,7 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
             g.beginPath();
             for (let xi = 0; xi <= hillData.length; xi++) {
                 let height = hillData[xi];
-                let y = h * (0.5 - height * 0.1);
+                let y = h * (0.52 - height * 0.1);
                 let x = (xi / hillData.length) * w;
                 if (xi == 0) {
                     g.moveTo(x, y);
@@ -114,8 +114,8 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
                     g.lineTo(x, y);
                 }
             }
-            g.lineTo(w, h * 0.50);
-            g.lineTo(0, h * 0.50);
+            g.lineTo(w, h * 0.52);
+            g.lineTo(0, h * 0.52);
             g.closePath();
 
             g.fillStyle = "rgba(0,0,0.1,0.3)";
@@ -140,8 +140,8 @@ let plateNo =0 ;
             g.stroke();
         }
         if (moon) {
-
-            const vignetteGrad = g.createRadialGradient(w / 4, h / 4, 0, w / 4, h / 4, w);
+            let m = {x: 0.7 * w , y: 0.25 * h};
+            const vignetteGrad = g.createRadialGradient(m.x,m.y, 0, m.x,m.y, w);
             vignetteGrad.addColorStop(0, "rgba(0,0,0,0.00)");
             // vignette.addColorStop(0.15,"rgba(0,0,0,0)");
             // vignette.addColorStop(0.85,"rgba(0,0,0,0)");
@@ -152,7 +152,7 @@ let plateNo =0 ;
 
             g.fillStyle = "rgba(255,255,192,0.2)"
             g.beginPath();
-            g.arc(w / 4, h / 4, 30, 0, Math.PI * 2);
+            g.arc(m.x,m.y, 30, 0, Math.PI * 2);
             g.fill();
         }
         if (grading) {
@@ -232,13 +232,13 @@ function start() {
     gfx.clear();
     let lastMs = 0;
     function frame(ms: number) {
-       // if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
+        if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
             gfx.fade();
-        //}
+        }
         notes.forEach(n => gfx.drawNote(n));
-      //  if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
+        if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
             gfx.topEffect();
-        //}
+        }
         window.requestAnimationFrame(frame);
         lastMs = ms;
     }
