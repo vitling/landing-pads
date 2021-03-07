@@ -13,7 +13,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         delayR.delayTime.value = timeR;
         const feedbackL = ctx.createGain();
         const feedbackR = ctx.createGain();
-        feedbackL.gain.value = feedbackR.gain.value = 0.3;
+        feedbackL.gain.value = feedbackR.gain.value = 0.5;
         feedbackL.connect(delayL);
         feedbackR.connect(delayR);
         delayL.connect(feedbackL);
@@ -26,7 +26,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         panR.panningModel = "equalpower";
         panR.setPosition(1.0,0,0);
         const gain = ctx.createGain();
-        gain.gain.value = 0.3;
+        gain.gain.value = 0.4;
 
         delayL.connect(panL);
         panL.connect(gain);
@@ -127,7 +127,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
     }
 
     function Bus() {
-        const d = StereoDelay(0.6,0.61);
+        const d = StereoDelay(0.2,0.21);
         const i = ctx.createGain();
         i.gain.value = 1.0;
         const o = ctx.createGain();

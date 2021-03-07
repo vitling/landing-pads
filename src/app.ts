@@ -10,7 +10,7 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
     const bb = document.createElement("canvas");
     const gb = bb.getContext("2d") as CanvasRenderingContext2D;
     const w = canvas.width = bb.width = 1080;
-    const h = canvas.height =bb.height =  1080;
+    const h = canvas.height =bb.height =  1920;
 
     function clear() {
         g.fillStyle = "black";
@@ -55,8 +55,8 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
         let rad = 4;
 
         g.arc(x+ (Math.min(y, h/2)/h) * 150 - 75 + (y>h/2 ? ((y-h/2)/(h/2)) *  Math.sin(60* y/h) * 20 : 0),y ,rad,0,Math.PI * 2);
-        if (y > h*0.5 && y < h * 0.52) {
-            let diff = (y - h * 0.5) / (h * 0.02);
+        if (y > h*0.5 && y < h * 0.513) {
+            let diff = (y - h * 0.5) / (h * 0.013);
             for (let i = -2; i <= 2; i++) {
                 g.arc(i * 16 * (1 - diff) + x+ (Math.min(y, h/2)/h) * 150 - 75 + (y>h/2 ? ((y-h/2)/(h/2)) *  Math.sin(60* y/h) * 20 : 0),y ,rad,0,Math.PI * 2);
             }
@@ -85,17 +85,22 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
             g.globalAlpha = 0.1;
             g.fillRect(0, 0, w, h);
         }
+        gb.globalCompositeOperation ="source-over";
         gb.drawImage(canvas, 0,0);
 
-        // g.globalCompositeOperation = "source-over";
+         g.globalCompositeOperation = "source-over";
+        //g.drawImage(bb,0,0);
         // g.fillStyle = "black";
         // g.fillRect(0,0,w,h);
-        g.globalCompositeOperation = "source-over";
+        //g.globalCompositeOperation = "lighter";
         g.globalAlpha = 0.95;
-        g.filter = "blur(5px)";
-        g.drawImage(bb, 0,0);
+         g.filter = "blur(3px)";
 
+        //g.drawImage(bb, 5,0);
+        g.drawImage(bb, 0,0);
         //g.drawImage(bb, -5,0);
+
+        gb.globalCompositeOperation ="source-over";
 
         if (hill) {
             g.beginPath();
@@ -227,13 +232,13 @@ function start() {
     gfx.clear();
     let lastMs = 0;
     function frame(ms: number) {
-        if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
+       // if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
             gfx.fade();
-        }
+        //}
         notes.forEach(n => gfx.drawNote(n));
-        if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
+      //  if (Math.floor(lastMs / 100) != Math.floor(ms / 100)) {
             gfx.topEffect();
-        }
+        //}
         window.requestAnimationFrame(frame);
         lastMs = ms;
     }
