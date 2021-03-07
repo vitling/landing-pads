@@ -102,6 +102,30 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         }
     }
 
+    function Splash() {
+        const oscNode = ctx.createOscillator();
+        oscNode.type = "sine";
+        oscNode.frequency.value = 440;
+        oscNode.start();
+
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = 0.0;
+
+        oscNode.connect(gainNode);
+
+        function trigger(f: number = 5000) {
+            oscNode.frequency.setValueAtTime(f*(0.5 + Math.random() * 6),ctx.currentTime);
+            oscNode.frequency.exponentialRampToValueAtTime(f,ctx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.0,ctx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
+        }
+        return {
+            trigger,
+            out: gainNode
+        }
+    }
+
     function Bus() {
         const d = StereoDelay(0.6,0.61);
         const i = ctx.createGain();
@@ -117,7 +141,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         }
     }
 
-    return {StereoDelay, Note, Bus, Out: ctx.destination, context: ctx}
+    return {StereoDelay, Note, Bus, Out: ctx.destination, context: ctx, Splash}
 }
 
 export {Sound}
