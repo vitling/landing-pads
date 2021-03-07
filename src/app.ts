@@ -6,6 +6,10 @@ type Note = {
 }
 
 function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean = true, moon: boolean = true, grading:boolean = false) {
+
+    const isFirefox = navigator.userAgent.search("Firefox") != -1;
+    const blur = !isFirefox;
+
     const g = canvas.getContext("2d") as CanvasRenderingContext2D;
     const bb = document.createElement("canvas");
     const gb = bb.getContext("2d") as CanvasRenderingContext2D;
@@ -94,7 +98,9 @@ function Gfx(canvas: HTMLCanvasElement, gradient: boolean = true, hill: boolean 
         // g.fillRect(0,0,w,h);
         //g.globalCompositeOperation = "lighter";
         g.globalAlpha = 0.95;
-        g.filter = "blur(3px)";
+        if (blur) {
+            g.filter = "blur(3px)";
+        }
 
         //g.drawImage(bb, 5,0);
         g.drawImage(bb, 0,0);
