@@ -230,11 +230,14 @@ function start() {
         doNote(noteToFreq(base + key + Math.floor(Math.random() * 4) * 12) + Math.random() * 5 - 2.5, noteToFreq(base + key + 12 + off) * (1 + Math.random() * 0.01 - 0.005));
     }
 
+    function trigger() {
+        newNote();
 
-   // newNotes();
-    window.setInterval(() => {
-        newNote()
-    }, 1000);
+        window.setTimeout(trigger, 1500 + 1100 * Math.sin((1/37) * Math.PI * 2 * new Date().getTime()/1000));
+    }
+
+    trigger();
+
     gfx.clear();
     let lastMs = 0;
     function frame(ms: number) {

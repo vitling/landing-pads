@@ -103,17 +103,22 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
     }
 
     function Splash() {
-        const oscNode = ctx.createOscillator();
-        oscNode.type = "sine";
-        oscNode.frequency.value = 440;
-        oscNode.start();
-
-        const gainNode = ctx.createGain();
-        gainNode.gain.value = 0.0;
-
-        oscNode.connect(gainNode);
+        const outNode = ctx.createGain();
 
         function trigger(f: number = 5000) {
+            const oscNode = ctx.createOscillator();
+            oscNode.type = "sine";
+            oscNode.frequency.value = 440;
+            oscNode.start();
+
+            const gainNode = ctx.createGain();
+            gainNode.gain.value = 0.0;
+
+            oscNode.connect(gainNode);
+            gainNode.connect(outNode);
+            oscNode.stop(ctx.currentTime + 0.2);
+            setTimeout(() => gainNode.disconnect(), 250);
+
             oscNode.frequency.setValueAtTime(f*(0.5 + Math.random() * 6),ctx.currentTime);
             oscNode.frequency.exponentialRampToValueAtTime(f,ctx.currentTime + 0.1);
             gainNode.gain.setValueAtTime(0.0,ctx.currentTime);
@@ -122,7 +127,7 @@ function Sound(ctx : AudioContext = (new (window.AudioContext || window.webkitAu
         }
         return {
             trigger,
-            out: gainNode
+            out: outNode
         }
     }
 
